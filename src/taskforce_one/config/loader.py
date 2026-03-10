@@ -86,9 +86,9 @@ class ConfigLoader:
         """
         if config_dir is None:
             # Check environment variable first
-            config_dir = os.getenv("CONFIG_DIR")
-            if config_dir:
-                config_dir = Path(config_dir)
+            config_dir_str = os.getenv("CONFIG_DIR")
+            if config_dir_str:
+                config_dir = Path(config_dir_str)
             else:
                 # Default to /app/config (Docker container path)
                 config_dir = Path("/app/config")

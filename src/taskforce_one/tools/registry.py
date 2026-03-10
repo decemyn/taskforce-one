@@ -3,35 +3,55 @@
 Manages and provides access to tools for agents.
 """
 
+from typing import TYPE_CHECKING
 
 from crewai.tools import BaseTool
 from loguru import logger
+
+if TYPE_CHECKING:
+    # These imports may not exist in all versions of crewai
+    pass
 
 
 class ToolRegistry:
     """Registry for managing available tools."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the tool registry."""
         self._tools: dict[str, BaseTool] = {}
         self._initialize_default_tools()
 
     def _initialize_default_tools(self) -> None:
         """Initialize default tools available to agents."""
-        # Import default crewai tools
+        # Import default crewai tools - some may not be available in all versions
+        # We intentionally don't use these imports but check availability
         try:
-            from crewai.tools import (
-                FileReadTool,
-                FileWriteTool,
-                ScrapeWebsiteTool,
-                SerperDevTool,
-            )
+            from crewai import tools  # noqa: F401
 
-            # Register default tools
-            self.register("read_file", FileReadTool())
-            self.register("write_file", FileWriteTool())
-            self.register("search", SerperDevTool())
-            self.register("scrape", ScrapeWebsiteTool())
+            # Try to import optional tools - these may not exist in all versions
+            try:
+                from crewai.tools import FileReadTool  # type: ignore[attr-defined]
+                self.register("read_file", FileReadTool())
+            except ImportError:
+                pass
+
+            try:
+                from crewai.tools import FileWriteTool  # type: ignore[attr-defined]
+                self.register("write_file", FileWriteTool())
+            except ImportError:
+                pass
+
+            try:
+                from crewai.tools import SerperDevTool  # type: ignore[attr-defined]
+                self.register("search", SerperDevTool())
+            except ImportError:
+                pass
+
+            try:
+                from crewai.tools import ScrapeWebsiteTool  # type: ignore[attr-defined]
+                self.register("scrape", ScrapeWebsiteTool())
+            except ImportError:
+                pass
 
             logger.info("Default tools initialized")
         except ImportError as e:

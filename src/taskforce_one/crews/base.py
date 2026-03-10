@@ -3,6 +3,7 @@
 Provides a foundation for creating crew workflows with CrewAI.
 """
 
+from collections.abc import Sequence
 from typing import Any
 
 from crewai import Crew, Task
@@ -22,7 +23,7 @@ class BaseCrew:
         self,
         name: str,
         description: str,
-        agents: list[BaseAgent],
+        agents: Sequence[BaseAgent],
         process: str = "sequential",
         verbose: bool = True,
         memory: bool = True,
@@ -68,12 +69,11 @@ class BaseCrew:
         crew_agents = [agent.crew_agent for agent in self.agents]
 
         return Crew(
-            agents=crew_agents,
+            agents=crew_agents,  # type: ignore[arg-type]
             tasks=self._tasks,
-            process=self.process,
+            process=self.process,  # type: ignore[arg-type]
             verbose=self.verbose,
             memory=self.memory,
-            max_iterations=self.max_iterations,
         )
 
     def add_task(self, task: Task) -> "BaseCrew":
@@ -115,7 +115,7 @@ class BaseCrew:
         logger.info(f"Crew {self.id} starting execution...")
         result = self.crew.kickoff(inputs={"input": input_data})
         logger.info(f"Crew {self.id} execution complete")
-        return result
+        return str(result)
 
     def execute_async(self, input_data: str) -> Any:
         """Execute the crew asynchronously.

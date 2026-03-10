@@ -6,6 +6,7 @@ Provides a foundation for creating custom agents with CrewAI.
 from typing import Any
 
 from crewai import Agent as CrewAgent
+from crewai import Task
 from loguru import logger
 
 
@@ -85,8 +86,10 @@ class BaseAgent:
             The result of the task execution
         """
         logger.info(f"Agent {self.id} executing task: {task[:50]}...")
-        result = self.crew_agent.execute_task(task)
-        return result
+        # Create a Task from the string description
+        crew_task = Task(description=task, expected_output="Task completion result", agent=self.crew_agent)
+        result = self.crew_agent.execute_task(crew_task)
+        return str(result)
 
     def __repr__(self) -> str:
         return f"<BaseAgent(id={self.id}, role={self.role})>"

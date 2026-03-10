@@ -4,6 +4,7 @@ Command-line interface for Task Force One.
 """
 
 import sys
+from pathlib import Path
 
 import click
 
@@ -20,18 +21,19 @@ def cli():
     pass
 
 
-@cli.command()
+@click.command()
 def info():
     """Show information about Task Force One."""
     click.echo(f"Task Force One v{__version__}")
     click.echo("CrewAI-based orchestration toolkit for Micro SaaS applications")
 
 
-@cli.command()
+@click.command()
 @click.option("--config-dir", type=click.Path(exists=True), help="Configuration directory")
 def list_agents(config_dir: str | None = None):
     """List all available agents."""
-    config = ConfigLoader(config_dir) if config_dir else ConfigLoader()
+    config_path = Path(config_dir) if config_dir else None
+    config = ConfigLoader(config_path) if config_path else ConfigLoader()
     agents_config = config.load_agents()
 
     if not agents_config:
@@ -47,11 +49,12 @@ def list_agents(config_dir: str | None = None):
         click.echo()
 
 
-@cli.command()
+@click.command()
 @click.option("--config-dir", type=click.Path(exists=True), help="Configuration directory")
 def list_crews(config_dir: str | None = None):
     """List all available crews."""
-    config = ConfigLoader(config_dir) if config_dir else ConfigLoader()
+    config_path = Path(config_dir) if config_dir else None
+    config = ConfigLoader(config_path) if config_path else ConfigLoader()
     crews_config = config.load_crews()
 
     if not crews_config:
@@ -68,13 +71,14 @@ def list_crews(config_dir: str | None = None):
         click.echo()
 
 
-@cli.command()
+@click.command()
 @click.argument("agent_id")
 @click.argument("task")
 @click.option("--config-dir", type=click.Path(exists=True), help="Configuration directory")
 def run_agent(agent_id: str, task: str, config_dir: str | None = None):
     """Run an agent with a specific task."""
-    config = ConfigLoader(config_dir) if config_dir else ConfigLoader()
+    config_path = Path(config_dir) if config_dir else None
+    config = ConfigLoader(config_path) if config_path else ConfigLoader()
     agents_config = config.load_agents()
 
     if agent_id not in agents_config:
@@ -89,13 +93,14 @@ def run_agent(agent_id: str, task: str, config_dir: str | None = None):
     click.echo(f"\nResult:\n{result}")
 
 
-@cli.command()
+@click.command()
 @click.argument("crew_id")
 @click.argument("input_data")
 @click.option("--config-dir", type=click.Path(exists=True), help="Configuration directory")
 def run_crew(crew_id: str, input_data: str, config_dir: str | None = None):
     """Run a crew with input data."""
-    config = ConfigLoader(config_dir) if config_dir else ConfigLoader()
+    config_path = Path(config_dir) if config_dir else None
+    config = ConfigLoader(config_path) if config_path else ConfigLoader()
     crews_config = config.load_crews()
     agents_config = config.load_agents()
 
@@ -117,7 +122,7 @@ def run_crew(crew_id: str, input_data: str, config_dir: str | None = None):
     click.echo(f"\nResult:\n{result}")
 
 
-@cli.command()
+@click.command()
 def serve():
     """Start the API server."""
     import uvicorn
