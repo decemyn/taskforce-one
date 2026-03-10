@@ -1,0 +1,24 @@
+# Task Force One - Core Dependencies
+crewai>=0.80.0
+crewai-tools>=0.14.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+python-dotenv>=1.0.0
+pyyaml>=6.0.0
+loguru>=0.7.0
+rich>=13.0.0
+fastapi>=0.110.0
+uvicorn>=0.27.0
+
+# Development Dependencies
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+pytest-cov>=4.1.0
+ruff>=0.4.0
+mypy>=1.8.0
+pre-commit>=3.6.0
+
+# Cloud Dependencies (optional)
+boto3>=1.34.0
+google-cloud-aiplatform>=1.40.0
+azure-ai-ml>=1.14.0

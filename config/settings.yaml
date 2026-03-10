@@ -1,0 +1,97 @@
+# Task Force One - Settings Configuration
+# Global application settings
+
+app:
+  name: "Task Force One"
+  version: "0.1.0"
+  description: "CrewAI-based orchestration toolkit for Micro SaaS"
+
+# API Configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true
+  workers: 1
+  log_level: "info"
+
+# LLM Provider Configuration
+llm:
+  provider: "openai"  # openai, anthropic, azure, google
+  model: "gpt-4"
+  temperature: 0.7
+  max_tokens: 2000
+  timeout: 60
+
+  # Provider-specific settings
+  openai:
+    api_key_env: "OPENAI_API_KEY"
+    organization: null
+  
+  anthropic:
+    api_key_env: "ANTHROPIC_API_KEY"
+  
+  azure:
+    api_key_env: "AZURE_OPENAI_API_KEY"
+    endpoint_env: "AZURE_OPENAI_ENDPOINT"
+    api_version: "2024-02-01"
+
+# Crew Configuration
+crew:
+  max_iterations: 10
+  verbose: true
+  memory: true
+  cache: true
+  allow_delegation: true
+  process: "sequential"  # sequential or hierarchical
+
+# Agent Defaults
+agent:
+  max_iterations: 5
+  verbose: true
+  allow_delegation: false
+  tools: []
+
+# Task Defaults
+task:
+  verbose: true
+  async_execution: false
+
+# Storage Configuration
+storage:
+  type: "local"  # local, redis, postgres
+  path: "./data"
+  
+  redis:
+    host: "localhost"
+    port: 6379
+    db: 0
+    password: null
+  
+  postgres:
+    host: "localhost"
+    port: 5432
+    database: "taskforce_db"
+    user: "taskforce"
+    password: null
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} - {message}"
+  file: "./logs/taskforce.log"
+  rotation: "100 MB"
+  retention: "30 days"
+
+# Security
+security:
+  api_key_header: "X-API-Key"
+  rate_limit:
+    enabled: true
+    requests_per_minute: 60
+
+# Monitoring
+monitoring:
+  prometheus_enabled: true
+  metrics_port: 9090
+  health_check_path: "/health"
+  readiness_check_path: "/ready"

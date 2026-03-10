@@ -1,0 +1,96 @@
+# Task Force One - Crew Definitions
+# Define your crew workflows here
+
+crews:
+  # Example: Content Creation Crew
+  - id: "content_creation"
+    name: "Content Creation Crew"
+    description: "Creates high-quality content from research to publication"
+    
+    # Process type: sequential or hierarchical
+    process: "sequential"
+    
+    # Agents in this crew
+    agents:
+      - "researcher"
+      - "writer"
+      - "editor"
+    
+    # Tasks for this crew
+    tasks:
+      - id: "research_task"
+        description: "Research the topic thoroughly"
+        agent: "researcher"
+        expected_output: "Comprehensive research notes"
+        
+      - id: "write_task"
+        description: "Write the content based on research"
+        agent: "writer"
+        expected_output: "Draft content"
+        context:  # Tasks that must complete before this one
+          - "research_task"
+        
+      - id: "edit_task"
+        description: "Edit and refine the content"
+        agent: "editor"
+        expected_output: "Final polished content"
+        context:
+          - "write_task"
+    
+    # Crew-level settings
+    verbose: true
+    memory: true
+    max_iterations: 10
+
+  # Example: Analysis Crew
+  - id: "analysis"
+    name: "Data Analysis Crew"
+    description: "Analyzes data and provides insights"
+    
+    process: "sequential"
+    
+    agents:
+      - "analyst"
+    
+    tasks:
+      - id: "analyze_task"
+        description: "Analyze the provided data and provide insights"
+        agent: "analyst"
+        expected_output: "Detailed analysis report"
+    
+    verbose: true
+
+  # Example: Planning Crew
+  - id: "planning"
+    name: "Strategic Planning Crew"
+    description: "Creates strategic plans for various objectives"
+    
+    process: "hierarchical"
+    
+    agents:
+      - "planner"
+      - "analyst"
+      - "writer"
+    
+    tasks:
+      - id: "analyze_situation"
+        description: "Analyze the current situation and constraints"
+        agent: "analyst"
+        expected_output: "Situation analysis"
+        
+      - id: "create_plan"
+        description: "Create a strategic plan based on analysis"
+        agent: "planner"
+        expected_output: "Strategic plan document"
+        context:
+          - "analyze_situation"
+        
+      - id: "document_plan"
+        description: "Document the plan with clear action items"
+        agent: "writer"
+        expected_output: "Formatted plan document"
+        context:
+          - "create_plan"
+    
+    verbose: true
+    memory: true
