@@ -74,7 +74,7 @@ jobs:
           context: .
           file: docker/Dockerfile
           load: true
-          tags: taskforce-one:test
+          tags: taskforce-one:latest
       
       - name: Set up Python
         uses: actions/setup-python@v5
