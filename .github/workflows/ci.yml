@@ -51,10 +51,10 @@ jobs:
           pip install pytest pytest-cov httpx
       
       - name: Run unit tests
-        run: pytest tests/unit -v --cov=src/taskforce_one --cov-report=xml
-      
+        run: pytest tests/unit -v
+
       - name: Run integration tests
-        run: pytest tests/integration -v --cov=src/taskforce_one --cov-report=xml
+        run: pytest tests/integration -v
 
   test-e2e:
     name: E2E Tests
