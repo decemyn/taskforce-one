@@ -31,7 +31,7 @@ class LangChainLLMAdapter(BaseLLM):
             from langchain_core.messages import HumanMessage
             lc_messages = [HumanMessage(content=messages)]
         else:
-            from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+            from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
             lc_messages = []
             for m in messages:
                 role = m.get("role", "user") if isinstance(m, dict) else getattr(m, "role", "user")
@@ -62,7 +62,7 @@ class LangChainLLMAdapter(BaseLLM):
             from langchain_core.messages import HumanMessage
             lc_messages = [HumanMessage(content=messages)]
         else:
-            from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+            from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
             lc_messages = []
             for m in messages:
                 role = m.get("role", "user") if isinstance(m, dict) else getattr(m, "role", "user")
@@ -77,11 +77,15 @@ class LangChainLLMAdapter(BaseLLM):
         response = await self._langchain_llm.ainvoke(lc_messages)
         return response.content if hasattr(response, "content") else str(response)
 
+    @property
     def provider(self) -> str:
         return type(self._langchain_llm).__name__
 
-    def is_litellm(self) -> bool:
-        return False
+    @provider.setter
+    def provider(self, value: str) -> None:
+        pass
+
+    is_litellm: bool = False
 
     def supports_stop_words(self) -> bool:
         return False
@@ -99,5 +103,5 @@ class LangChainLLMAdapter(BaseLLM):
     def get_file_uploader(self) -> Any:
         return None
 
-    def format_text_content(self, content: Any) -> str:
-        return str(content)
+    def format_text_content(self, text: str) -> dict[str, Any]:
+        return {"type": "text", "text": str(text)}
