@@ -1,13 +1,13 @@
 Development Guide
-================
+==================
 
 This guide covers setting up a development environment and contributing to Task Force One.
 
 Development Environment Setup
----------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Quick Start
-~~~~~~~~~~
+~~~~~~~~~~~~
 
 1. Clone the repository:
 
@@ -29,7 +29,7 @@ Quick Start
    source .venv/bin/activate
 
 Manual Setup
-~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 1. Create a virtual environment:
 
@@ -54,7 +54,7 @@ Manual Setup
    # Edit .env with your settings
 
 Running the Application
-----------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Start the API server:
 
@@ -69,7 +69,7 @@ Or use the run script:
    ./scripts/run.sh
 
 Running Tests
-------------
+--------------------------------------------------------------------------------------
 
 Run all tests:
 
@@ -97,7 +97,7 @@ Run with coverage:
    ./scripts/test.sh --coverage
 
 Code Quality
------------
+--------------------------------------------------------------
 
 Run linters:
 
@@ -113,7 +113,7 @@ Run formatter:
    ./scripts/format.sh --check  # Check without applying
 
 Project Structure
-----------------
+------------------------------------------------------------------------------------------------------------------------------------------
 
 ::
 
@@ -134,7 +134,7 @@ Project Structure
    └── docs/                 # Documentation
 
 Code Style
-----------
+----------------------------------------------------------
 
 * Follow PEP 8
 * Use type hints
@@ -142,7 +142,7 @@ Code Style
 * Run formatter before committing
 
 Git Workflow
------------
+--------------------------------------------------------------
 
 1. Create a feature branch:
 
@@ -176,7 +176,7 @@ Git Workflow
 6. Create a Pull Request
 
 Debugging
----------
+--------------------------------------------
 
 View application logs:
 
@@ -197,7 +197,7 @@ Health check:
    ./scripts/health.sh
 
 IDE Setup
----------
+--------------------------------------------
 
 VS Code
 ~~~~~~~
@@ -216,7 +216,7 @@ PyCharm
 3. Configure test runner in settings
 
 Contributing
-------------
+--------------------------------------------------------------------------------------
 
 1. Fork the repository
 2. Create a feature branch
@@ -226,6 +226,6 @@ Contributing
 6. Submit a Pull Request
 
 Questions?
-----------
+----------------------------------------------------------
 
 If you have questions, please open an issue on GitHub.

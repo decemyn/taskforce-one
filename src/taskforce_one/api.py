@@ -3,7 +3,6 @@
 FastAPI application for serving the orchestration toolkit.
 """
 
-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
@@ -37,30 +36,35 @@ config = ConfigLoader()
 # Request/Response models
 class AgentRequest(BaseModel):
     """Request model for agent execution."""
+
     agent_id: str
     task: str
 
 
 class CrewRequest(BaseModel):
     """Request model for crew execution."""
+
     crew_id: str
     input_data: str
 
 
 class AgentResponse(BaseModel):
     """Response model for agent execution."""
+
     agent_id: str
     result: str
 
 
 class CrewResponse(BaseModel):
     """Response model for crew execution."""
+
     crew_id: str
     result: str
 
 
 class HealthResponse(BaseModel):
     """Response model for health check."""
+
     status: str
     version: str
 
@@ -97,10 +101,9 @@ def _initialize_crews():
                 if agent_id in _agents:
                     crew_agents.append(_agents[agent_id])
 
-            if crew_agents:
-                crew = CrewFactory.from_config(crew_config, crew_agents)
-                _crews[crew_id] = crew
-                logger.info(f"Loaded crew: {crew_id}")
+            crew = CrewFactory.from_config(crew_config, crew_agents)
+            _crews[crew_id] = crew
+            logger.info(f"Loaded crew: {crew_id}")
         except Exception as e:
             logger.error(f"Failed to load crew {crew_id}: {e}")
 
@@ -196,4 +199,5 @@ async def execute_crew(crew_id: str, request: CrewRequest):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

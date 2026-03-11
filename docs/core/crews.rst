@@ -4,12 +4,12 @@ Crews
 Crews are groups of agents that work together to accomplish complex tasks.
 
 Creating a Crew
----------------
+------------------------------------------------------------------------------------------------------------------------
 
 Crews combine multiple agents and define how they work together.
 
 Programmatic Creation
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -40,7 +40,7 @@ Programmatic Creation
    )
 
 Crew Properties
---------------
+----------------------------------------------------------------------------------------------------------------------
 
 ``name`` (str, required)
    Display name of the crew.
@@ -66,7 +66,7 @@ Crew Properties
    Maximum iterations for the crew.
 
 Using a Crew
-------------
+--------------------------------------------------------------------------------------
 
 Execute a crew:
 
@@ -82,7 +82,7 @@ Execute asynchronously:
    result = future.result()
 
 Adding Tasks
-------------
+--------------------------------------------------------------------------------------
 
 Add tasks to a crew:
 
@@ -98,7 +98,7 @@ Add tasks to a crew:
    crew.add_task(task)
 
 Crew Factory
------------
+--------------------------------------------------------------
 
 Use CrewFactory to create crews from configuration:
 
@@ -121,7 +121,7 @@ Use CrewFactory to create crews from configuration:
    crew = CrewFactory.from_config(crew_config, agents)
 
 Crew ID
--------
+---------------------
 
 Each crew has a unique ID:
 
@@ -131,10 +131,10 @@ Each crew has a unique ID:
    print(crew.id)  # "content_creation_crew"
 
 Process Types
-------------
+--------------------------------------------------------------------------------------
 
 Sequential
-~~~~~~~~~~
+~~~~~~~~~~~~
 
 Agents complete tasks in order. The output of one agent becomes input to the next.
 
@@ -147,7 +147,7 @@ Agents complete tasks in order. The output of one agent becomes input to the nex
    )
 
 Hierarchical
-~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 A manager agent delegates tasks to other agents and synthesizes results.
 

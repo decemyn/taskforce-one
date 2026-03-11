@@ -15,6 +15,7 @@ from pydantic_settings import BaseSettings
 
 class LLMSettings(BaseModel):
     """LLM provider settings."""
+
     provider: str = "openai"
     model: str = "gpt-4"
     temperature: float = 0.7
@@ -24,6 +25,7 @@ class LLMSettings(BaseModel):
 
 class APISettings(BaseModel):
     """API server settings."""
+
     host: str = "0.0.0.0"
     port: int = 8000
     reload: bool = True
@@ -33,6 +35,7 @@ class APISettings(BaseModel):
 
 class StorageSettings(BaseModel):
     """Storage configuration."""
+
     type: str = "local"
     path: str = "./data"
     redis_host: str = "localhost"
@@ -43,6 +46,7 @@ class StorageSettings(BaseModel):
 
 class LoggingSettings(BaseModel):
     """Logging configuration."""
+
     level: str = "INFO"
     file: str = "./logs/taskforce.log"
     rotation: str = "100 MB"

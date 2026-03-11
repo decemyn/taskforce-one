@@ -57,6 +57,18 @@ The easiest way to deploy:
 bash scripts/deploy.sh
 ```
 
+### External Configuration
+
+Task Force One allows loading agent and crew configurations from a location outside its own repository. To use an external configuration directory (e.g., `agents_of_ai/custom_workflow`), set the `CONFIG_DIR` environment variable to the absolute path of your configuration folder before deploying or running the services.
+
+When using Docker Compose, you can provide this path via the environment:
+
+```bash
+CONFIG_DIR=$(pwd)/../custom_workflow bash scripts/deploy.sh
+```
+
+This will mount your external directory into the container's `/app/config` location, ensuring that your private or proprietary configurations are never committed to the core engine repository.
+
 This script:
 1. Checks Docker availability
 2. Installs Python dependencies if needed

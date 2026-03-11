@@ -10,8 +10,7 @@ import requests
 
 # Skip E2E tests if not in E2E mode
 pytestmark = pytest.mark.skipif(
-    os.getenv("RUN_E2E_TESTS") != "true",
-    reason="E2E tests require RUN_E2E_TESTS=true"
+    os.getenv("RUN_E2E_TESTS") != "true", reason="E2E tests require RUN_E2E_TESTS=true"
 )
 
 
@@ -28,7 +27,7 @@ class TestDockerDeployment:
         """Wait for API to be ready."""
         max_retries = 30
         retry_delay = 2
-        
+
         for i in range(max_retries):
             try:
                 response = requests.get(f"{base_url}/health", timeout=5)
@@ -36,16 +35,16 @@ class TestDockerDeployment:
                     return True
             except requests.exceptions.RequestException:
                 pass
-            
+
             if i < max_retries - 1:
                 time.sleep(retry_delay)
-        
+
         pytest.fail(f"API not available at {base_url} after {max_retries * retry_delay} seconds")
 
     def test_api_health(self, base_url, wait_for_api):
         """Test API health endpoint."""
         response = requests.get(f"{base_url}/health")
-        
+
         assert response.status_code == 200
         data = response.json()
         assert data["status"] == "healthy"
@@ -53,7 +52,7 @@ class TestDockerDeployment:
     def test_root_endpoint(self, base_url, wait_for_api):
         """Test root endpoint."""
         response = requests.get(f"{base_url}/")
-        
+
         assert response.status_code == 200
         data = response.json()
         assert "name" in data
@@ -62,11 +61,11 @@ class TestDockerDeployment:
     def test_list_agents(self, base_url, wait_for_api):
         """Test listing agents."""
         response = requests.get(f"{base_url}/agents")
-        
+
         assert response.status_code == 200
         data = response.json()
         assert "agents" in data
-        
+
         # Verify we have the configured agents
         agents = data["agents"]
         agent_ids = [a["id"] for a in agents]
@@ -76,7 +75,7 @@ class TestDockerDeployment:
     def test_list_crews(self, base_url, wait_for_api):
         """Test listing crews."""
         response = requests.get(f"{base_url}/crews")
-        
+
         assert response.status_code == 200
         data = response.json()
         assert "crews" in data
@@ -85,18 +84,18 @@ class TestDockerDeployment:
         """Test 404 for non-existent agent."""
         response = requests.post(
             f"{base_url}/agents/nonexistent/execute",
-            json={"agent_id": "nonexistent", "task": "test"}
+            json={"agent_id": "nonexistent", "task": "test"},
         )
-        
+
         assert response.status_code == 404
 
     def test_crew_not_found(self, base_url, wait_for_api):
         """Test 404 for non-existent crew."""
         response = requests.post(
             f"{base_url}/crews/nonexistent/execute",
-            json={"crew_id": "nonexistent", "input_data": "test"}
+            json={"crew_id": "nonexistent", "input_data": "test"},
         )
-        
+
         assert response.status_code == 404
 
 
@@ -108,9 +107,9 @@ class TestDockerCompose:
         result = subprocess.run(
             ["docker", "compose", "-f", "docker/docker-compose.yml", "config"],
             capture_output=True,
-            cwd=os.path.join(os.path.dirname(__file__), "..", "..")
+            cwd=os.path.join(os.path.dirname(__file__), "..", ".."),
         )
-        
+
         assert result.returncode == 0, f"docker-compose config failed: {result.stderr.decode()}"
 
     def test_required_services_exist(self):
@@ -118,12 +117,12 @@ class TestDockerCompose:
         result = subprocess.run(
             ["docker", "compose", "-f", "docker/docker-compose.yml", "config", "--services"],
             capture_output=True,
-            cwd=os.path.join(os.path.dirname(__file__), "..", "..")
+            cwd=os.path.join(os.path.dirname(__file__), "..", ".."),
         )
-        
+
         assert result.returncode == 0
         services = result.stdout.decode().strip().split("\n")
-        
+
         assert "taskforce-one" in services
         assert "taskforce-postgres" in services
         assert "taskforce-redis" in services

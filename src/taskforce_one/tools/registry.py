@@ -31,24 +31,28 @@ class ToolRegistry:
             # Try to import optional tools - these may not exist in all versions
             try:
                 from crewai.tools import FileReadTool  # type: ignore[attr-defined]
+
                 self.register("read_file", FileReadTool())
             except ImportError:
                 pass
 
             try:
                 from crewai.tools import FileWriteTool  # type: ignore[attr-defined]
+
                 self.register("write_file", FileWriteTool())
             except ImportError:
                 pass
 
             try:
                 from crewai.tools import SerperDevTool  # type: ignore[attr-defined]
+
                 self.register("search", SerperDevTool())
             except ImportError:
                 pass
 
             try:
                 from crewai.tools import ScrapeWebsiteTool  # type: ignore[attr-defined]
+
                 self.register("scrape", ScrapeWebsiteTool())
             except ImportError:
                 pass

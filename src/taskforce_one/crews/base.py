@@ -158,7 +158,7 @@ class CrewFactory:
             if agent_id in agent_map:
                 crew_agents.append(agent_map[agent_id])
 
-        return BaseCrew(
+        crew = BaseCrew(
             name=config.get("name", ""),
             description=config.get("description", ""),
             agents=crew_agents,
@@ -167,6 +167,20 @@ class CrewFactory:
             memory=config.get("memory", True),
             max_iterations=config.get("max_iterations", 10),
         )
+
+        # Add tasks from configuration
+        for task_cfg in config.get("tasks", []):
+            agent_id = task_cfg.get("agent")
+            task_agent = agent_map.get(agent_id)
+            if task_agent:
+                task = Task(
+                    description=task_cfg.get("description", ""),
+                    expected_output=task_cfg.get("expected_output", ""),
+                    agent=task_agent.crew_agent,
+                )
+                crew.add_task(task)
+
+        return crew
 
     @staticmethod
     def create_multiple(
@@ -182,7 +196,4 @@ class CrewFactory:
         Returns:
             List of BaseCrew instances
         """
-        return [
-            CrewFactory.from_config(config, agents)
-            for config in configs
-        ]
+        return [CrewFactory.from_config(config, agents) for config in configs]
