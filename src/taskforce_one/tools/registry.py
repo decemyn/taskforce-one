@@ -57,6 +57,25 @@ class ToolRegistry:
             except ImportError:
                 pass
 
+            # Try to import tools from crewai_tools package
+            try:
+                from crewai_tools import CodeInterpreterTool  # type: ignore[attr-defined]
+
+                self.register("code_interpreter", CodeInterpreterTool())
+                # Also register as python_repl for backwards compatibility
+                self.register("python_repl", CodeInterpreterTool())
+                # Also register as calculator - CodeInterpreter can handle calculations
+                self.register("calculator", CodeInterpreterTool())
+            except ImportError:
+                pass
+
+            try:
+                from crewai_tools import DirectoryReadTool  # type: ignore[attr-defined]
+
+                self.register("directory_read", DirectoryReadTool())
+            except ImportError:
+                pass
+
             logger.info("Default tools initialized")
         except ImportError as e:
             logger.warning(f"Could not import default tools: {e}")
