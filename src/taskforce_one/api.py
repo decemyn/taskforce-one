@@ -3,7 +3,6 @@
 FastAPI application for serving the orchestration toolkit.
 """
 
-from typing import Any, Dict, Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,8 +12,7 @@ from pydantic import BaseModel
 from taskforce_one import __version__
 from taskforce_one.agents.base import AgentFactory, BaseAgent
 from taskforce_one.config.loader import ConfigLoader
-from taskforce_one.crews.base import CrewFactory, BaseCrew
-
+from taskforce_one.crews.base import BaseCrew, CrewFactory
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -68,14 +66,14 @@ class HealthResponse(BaseModel):
 
 
 # Store for agents and crews
-_agents: Dict[str, BaseAgent] = {}
-_crews: Dict[str, BaseCrew] = {}
+_agents: dict[str, BaseAgent] = {}
+_crews: dict[str, BaseCrew] = {}
 
 
 def _initialize_agents():
     """Initialize agents from configuration."""
     global _agents
-    
+
     agents_config = config.load_agents()
     for agent_id, agent_config in agents_config.items():
         try:
@@ -89,7 +87,7 @@ def _initialize_agents():
 def _initialize_crews():
     """Initialize crews from configuration."""
     global _crews
-    
+
     crews_config = config.load_crews()
     for crew_id, crew_config in crews_config.items():
         try:
@@ -98,7 +96,7 @@ def _initialize_crews():
             for agent_id in crew_config.get("agents", []):
                 if agent_id in _agents:
                     crew_agents.append(_agents[agent_id])
-            
+
             if crew_agents:
                 crew = CrewFactory.from_config(crew_config, crew_agents)
                 _crews[crew_id] = crew
@@ -116,7 +114,7 @@ async def startup_event():
     logger.info(f"Loaded {len(_agents)} agents and {len(_crews)} crews")
 
 
-@app.get("/", response_model=Dict[str, str])
+@app.get("/", response_model=dict[str, str])
 async def root():
     """Root endpoint."""
     return {
@@ -171,10 +169,10 @@ async def execute_agent(agent_id: str, request: AgentRequest):
     """Execute an agent with a task."""
     if agent_id not in _agents:
         raise HTTPException(status_code=404, detail=f"Agent {agent_id} not found")
-    
+
     agent = _agents[agent_id]
     result = agent.execute(request.task)
-    
+
     return AgentResponse(
         agent_id=agent_id,
         result=result,
@@ -186,10 +184,10 @@ async def execute_crew(crew_id: str, request: CrewRequest):
     """Execute a crew with input data."""
     if crew_id not in _crews:
         raise HTTPException(status_code=404, detail=f"Crew {crew_id} not found")
-    
+
     crew = _crews[crew_id]
     result = crew.execute(request.input_data)
-    
+
     return CrewResponse(
         crew_id=crew_id,
         result=str(result),

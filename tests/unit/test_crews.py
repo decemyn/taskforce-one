@@ -97,8 +97,10 @@ class TestBaseCrew:
         assert "2" in repr(crew)  # 2 agents
 
     @patch("taskforce_one.crews.base.Crew")
-    def test_crew_creation(self, mock_crew, mock_agents):
+    @patch("taskforce_one.agents.base.CrewAgent")
+    def test_crew_creation(self, mock_agent, mock_crew, mock_agents):
         """Test CrewAI crew creation."""
+        mock_agent.return_value = MagicMock()
         crew = BaseCrew(
             name="Test Crew",
             description="Test description",
@@ -115,8 +117,10 @@ class TestBaseCrew:
         assert call_kwargs["memory"] is True
 
     @patch("taskforce_one.crews.base.Crew")
-    def test_crew_cached(self, mock_crew, mock_agents):
+    @patch("taskforce_one.agents.base.CrewAgent")
+    def test_crew_cached(self, mock_agent, mock_crew, mock_agents):
         """Test that CrewAI crew is cached."""
+        mock_agent.return_value = MagicMock()
         crew = BaseCrew(
             name="Test Crew",
             description="Test description",

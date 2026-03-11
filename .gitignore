@@ -68,3 +68,4 @@ cache/
 # Misc
 *.bak
 *.tmp
+.kilocode
