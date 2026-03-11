@@ -1,22 +1,22 @@
 API Reference
-============
+=============
 
 Task Force One provides a FastAPI-based REST API for managing and executing agents and crews.
 
 Base URL
--------
+---------------------
 
 ::
 
    http://localhost:8000
 
 Authentication
--------------
+-----------------------------------------------------------------------------------------
 
 Currently, no authentication is required. For production deployments, implement your own authentication.
 
 Endpoints
---------
+---------------------------------------
 
 Root
 ~~~
@@ -36,7 +36,7 @@ Returns API information.
    }
 
 Health Check
-~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 **GET /health**
 
@@ -52,7 +52,7 @@ Returns the health status of the API.
    }
 
 List Agents
-~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 **GET /agents**
 
@@ -73,7 +73,7 @@ Returns a list of all configured agents.
    }
 
 List Crews
-~~~~~~~~~~
+~~~~~~~~~~~~
 
 **GET /crews**
 
@@ -95,7 +95,7 @@ Returns a list of all configured crews.
    }
 
 Execute Agent
-~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 **POST /agents/{agent_id}/execute**
 
@@ -124,7 +124,7 @@ Executes an agent with a given task.
    }
 
 Execute Crew
-~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 **POST /crews/{crew_id}/execute**
 
@@ -153,7 +153,7 @@ Executes a crew with given input data.
    }
 
 Error Responses
---------------
+----------------------------------------------------------------------------------------------------------------------
 
 **404 Not Found**
 
@@ -172,7 +172,7 @@ Error Responses
    }
 
 API Clients
-----------
+----------------------------------------------------------
 
 Python
 ~~~~~~
@@ -197,7 +197,7 @@ Using requests:
    result = response.json()
 
 Using OpenAPI Client
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Generate a client from the OpenAPI spec:
 

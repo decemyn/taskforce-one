@@ -9,6 +9,8 @@ from crewai import Agent as CrewAgent
 from crewai import Task
 from loguru import logger
 
+from taskforce_one.llm import DynamicLLMLoader
+
 
 class BaseAgent:
     """Base class for Task Force One agents.
@@ -27,6 +29,7 @@ class BaseAgent:
         allow_delegation: bool = False,
         tools: list[Any] | None = None,
         llm_config: dict[str, Any] | None = None,
+        agent_id: str | None = None,
     ):
         """Initialize a base agent.
 
@@ -48,9 +51,10 @@ class BaseAgent:
         self.allow_delegation = allow_delegation
         self.tools = tools or []
         self.llm_config = llm_config or {}
+        self.llm: Any = None
 
         self._agent: CrewAgent | None = None
-        self._id = role.lower().replace(" ", "_")
+        self._id = agent_id or role.lower().replace(" ", "_")
 
     @property
     def id(self) -> str:
@@ -66,15 +70,21 @@ class BaseAgent:
 
     def _create_agent(self) -> CrewAgent:
         """Create the underlying CrewAI agent."""
-        return CrewAgent(
-            role=self.role,
-            goal=self.goal,
-            backstory=self.backstory,
-            verbose=self.verbose,
-            max_iterations=self.max_iterations,
-            allow_delegation=self.allow_delegation,
-            tools=self.tools,
-        )
+        kwargs: dict[str, Any] = {
+            "role": self.role,
+            "goal": self.goal,
+            "backstory": self.backstory,
+            "verbose": self.verbose,
+            "max_iterations": self.max_iterations,
+            "allow_delegation": self.allow_delegation,
+            "tools": self.tools,
+        }
+
+        # If an LLM was successfully loaded dynamically, inject it
+        if self.llm is not None:
+            kwargs["llm"] = self.llm
+
+        return CrewAgent(**kwargs)
 
     def execute(self, task: str) -> str:
         """Execute a task with this agent.
@@ -87,7 +97,9 @@ class BaseAgent:
         """
         logger.info(f"Agent {self.id} executing task: {task[:50]}...")
         # Create a Task from the string description
-        crew_task = Task(description=task, expected_output="Task completion result", agent=self.crew_agent)
+        crew_task = Task(
+            description=task, expected_output="Task completion result", agent=self.crew_agent
+        )
         result = self.crew_agent.execute_task(crew_task)
         return str(result)
 
@@ -108,7 +120,7 @@ class AgentFactory:
         Returns:
             BaseAgent instance
         """
-        return BaseAgent(
+        agent = BaseAgent(
             role=config.get("role", ""),
             goal=config.get("goal", ""),
             backstory=config.get("backstory", ""),
@@ -117,7 +129,35 @@ class AgentFactory:
             allow_delegation=config.get("allow_delegation", False),
             tools=config.get("tools", []),
             llm_config=config.get("llm", {}),
+            agent_id=config.get("id"),
         )
+
+        # Process dynamic LLM loading if defined in configuration
+        llm_config = agent.llm_config
+        provider_module = llm_config.get("provider_module")
+        provider_class = llm_config.get("provider_class")
+        provider_config = llm_config.get("config", {})
+
+        if provider_module and provider_class:
+            try:
+                langchain_llm = DynamicLLMLoader.load(
+                    provider_module=provider_module,
+                    provider_class=provider_class,
+                    config=provider_config,
+                )
+                # Wrap the LangChain model in a CrewAI-compatible adapter
+                from taskforce_one.llm.crewai_adapter import LangChainLLMAdapter
+                agent.llm = LangChainLLMAdapter(langchain_llm)
+                logger.info(
+                    f"Wrapped {provider_class} in LangChainLLMAdapter for agent '{agent.id}'"
+                )
+            except Exception as e:
+                logger.warning(
+                    f"Failed to load dynamic LLM {provider_module}.{provider_class} "
+                    f"for agent '{agent.id}': {e}. Falling back to default."
+                )
+
+        return agent
 
     @staticmethod
     def create_multiple(configs: list[dict[str, Any]]) -> list[BaseAgent]:

@@ -1,5 +1,5 @@
 Task Force One Documentation
-============================
+================================
 
 .. image:: https://img.shields.io/badge/version-0.1.0-blue.svg
    :target: https://github.com/taskforce-one/taskforce-one
@@ -16,7 +16,7 @@ Task Force One Documentation
 Task Force One is a CrewAI-based orchestration toolkit for Micro SaaS applications. It provides a flexible framework for creating and managing AI agent crews that can collaborate to accomplish complex tasks.
 
 Building the Documentation
---------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 To build the HTML documentation:
 
@@ -39,7 +39,7 @@ For live-reload development:
    cd docs && make livehtml
 
 Features
---------
+---------------------------------------
 
 * **Agent Management**: Create and configure AI agents with custom roles, goals, and backstories
 * **Crew Orchestration**: Organize agents into crews with sequential or hierarchical processing
@@ -49,7 +49,7 @@ Features
 * **Configuration**: YAML-based configuration for agents, crews, and settings
 
 Quick Start
------------
+--------------------------------------------------------------
 
 Install the package:
 
@@ -80,7 +80,7 @@ Or use Docker:
 Now visit http://localhost:8000 to access the API.
 
 Configuration
--------------
+-----------------------------------------------------------------------------------------
 
 Task Force One uses YAML configuration files located in the ``config/`` directory:
 
@@ -91,7 +91,7 @@ Task Force One uses YAML configuration files located in the ``config/`` director
 See the :doc:`guides/configuration` guide for detailed configuration options.
 
 API Endpoints
--------------
+-----------------------------------------------------------------------------------------
 
 The API provides the following endpoints:
 
@@ -105,7 +105,7 @@ The API provides the following endpoints:
 See the :doc:`api_reference` for detailed API documentation.
 
 Development
------------
+--------------------------------------------------------------
 
 Clone the repository and set up the development environment:
 
@@ -130,7 +130,7 @@ Run linters:
 See the :doc:`guides/development` guide for more development information.
 
 Contents
---------
+---------------------------------------
 
 .. toctree::
    :maxdepth: 2
@@ -139,6 +139,7 @@ Contents
    guides/configuration
    guides/deployment
    guides/development
+   guides/llm_integration
 
 .. toctree::
    :maxdepth: 2
@@ -155,7 +156,7 @@ Contents
    core/tools
 
 Indices and tables
-==================
+=====================
 
 * :ref:`genindex`
 * :ref:`modindex`

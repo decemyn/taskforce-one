@@ -1,21 +1,21 @@
 Deployment Guide
-================
+==================
 
 Task Force One can be deployed using Docker Compose or directly on a server.
 
 Docker Deployment
------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
 
 The recommended way to deploy Task Force One is using Docker Compose.
 
 Prerequisites
-~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Docker Engine 20.10+
 * Docker Compose 2.0+
 
 Quick Start
-~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 1. Clone the repository:
 
@@ -59,7 +59,7 @@ The Docker Compose configuration starts the following services:
 * ``taskforce-redis`` - Redis cache
 
 Accessing the API
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The API is available at http://localhost:8000
 
@@ -82,7 +82,7 @@ Stop the services:
    docker compose down
 
 Development Mode
----------------
+------------------------------------------------------------------------------------------------------------------------
 
 For development, you can use the development Docker configuration:
 
@@ -93,7 +93,7 @@ For development, you can use the development Docker configuration:
 This enables auto-reload and additional debugging features.
 
 Environment Variables
---------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Configure your deployment using environment variables:
 
@@ -114,7 +114,7 @@ Configure your deployment using environment variables:
    REDIS_PORT=6379
 
 Production Deployment
---------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 For production deployments:
 
@@ -147,7 +147,7 @@ Example nginx configuration:
    }
 
 Docker Swarm
-------------
+--------------------------------------------------------------------------------------
 
 Deploy to Docker Swarm:
 
@@ -156,14 +156,14 @@ Deploy to Docker Swarm:
    docker stack deploy -c docker/docker-compose.yml taskforce
 
 Kubernetes
-----------
+----------------------------------------------------------
 
 For Kubernetes deployment, you'll need to create your own manifests. The Docker images are available at:
 
 * ``taskforce-one:latest`` - Main API image
 
 Manual Installation
-------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------
 
 For manual installation without Docker:
 

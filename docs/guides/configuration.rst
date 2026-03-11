@@ -1,10 +1,10 @@
 Configuration Guide
-==================
+=====================
 
 Task Force One uses YAML configuration files to define agents, crews, and application settings. By default, these files are located in the ``config/`` directory.
 
 Configuration Directory
------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 You can specify a custom configuration directory using:
 
@@ -12,7 +12,7 @@ You can specify a custom configuration directory using:
 2. Docker volume mount: ``/app/config``
 
 Agents Configuration
--------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------
 
 The ``agents.yaml`` file defines your AI agents. Each agent has the following properties:
 
@@ -41,7 +41,7 @@ The ``agents.yaml`` file defines your AI agents. Each agent has the following pr
        max_iterations: 5
 
 Agent Properties
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``id`` (required)
    Unique identifier for the agent
@@ -68,7 +68,7 @@ Agent Properties
    List of tool names available to the agent
 
 Crews Configuration
-------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------
 
 The ``crews.yaml`` file defines crews - groups of agents that work together:
 
@@ -88,7 +88,7 @@ The ``crews.yaml`` file defines crews - groups of agents that work together:
        max_iterations: 10
 
 Crew Properties
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``id`` (required)
    Unique identifier for the crew
@@ -115,7 +115,7 @@ Crew Properties
    Maximum iterations for execution
 
 Settings Configuration
----------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 The ``settings.yaml`` file controls application settings:
 
@@ -154,7 +154,7 @@ The ``settings.yaml`` file controls application settings:
      retention: 30 days
 
 Settings Properties
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``app``
    Application metadata
@@ -172,7 +172,7 @@ Settings Properties
    Logging configuration
 
 Environment Variables
----------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 You can override settings using environment variables:
 

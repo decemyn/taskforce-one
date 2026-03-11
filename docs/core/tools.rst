@@ -4,7 +4,7 @@ Tools
 Tools give agents capabilities to interact with external systems and perform specific actions.
 
 Default Tools
-------------
+--------------------------------------------------------------------------------------
 
 Task Force One includes several default tools:
 
@@ -14,7 +14,7 @@ Task Force One includes several default tools:
 * ``scrape`` - Scrape content from websites
 
 Using Tools
------------
+--------------------------------------------------------------
 
 Assign tools to agents:
 
@@ -39,7 +39,7 @@ Assign tools to agents:
    )
 
 Tool Registry
-------------
+--------------------------------------------------------------------------------------
 
 The ToolRegistry manages available tools:
 
@@ -64,7 +64,7 @@ The ToolRegistry manages available tools:
    registry.unregister("my_tool")
 
 Custom Tools
-------------
+--------------------------------------------------------------------------------------
 
 Create custom tools using CrewAI's BaseTool:
 
@@ -86,7 +86,7 @@ Create custom tools using CrewAI's BaseTool:
    registry.register("custom", custom_tool)
 
 Tool Configuration
------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
 
 Tools can be configured in agent definitions:
 
@@ -102,7 +102,7 @@ Tools can be configured in agent definitions:
          - scrape
 
 Best Practices
--------------
+-----------------------------------------------------------------------------------------
 
 1. **Use appropriate tools**: Assign only relevant tools to each agent
 2. **Document tools**: Provide clear descriptions for custom tools

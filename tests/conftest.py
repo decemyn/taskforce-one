@@ -105,23 +105,25 @@ def sample_settings_config() -> dict:
 
 
 @pytest.fixture
-def config_files(temp_config_dir, sample_agents_config, sample_crews_config, sample_settings_config) -> Path:
+def config_files(
+    temp_config_dir, sample_agents_config, sample_crews_config, sample_settings_config
+) -> Path:
     """Create configuration files in temp directory."""
     # Write agents.yaml
     agents_file = temp_config_dir / "agents.yaml"
     with open(agents_file, "w") as f:
         yaml.dump({"agents": sample_agents_config}, f)
-    
+
     # Write crews.yaml
     crews_file = temp_config_dir / "crews.yaml"
     with open(crews_file, "w") as f:
         yaml.dump({"crews": sample_crews_config}, f)
-    
+
     # Write settings.yaml
     settings_file = temp_config_dir / "settings.yaml"
     with open(settings_file, "w") as f:
         yaml.dump(sample_settings_config, f)
-    
+
     return temp_config_dir
 
 
@@ -157,7 +159,7 @@ def api_client():
     """Create a test client for the FastAPI app."""
     from fastapi.testclient import TestClient
     from taskforce_one.api import app
-    
+
     with patch("taskforce_one.config.loader.ConfigLoader") as mock_loader:
         # Setup mock to return test config
         mock_instance = MagicMock()
@@ -171,7 +173,7 @@ def api_client():
         }
         mock_instance.load_crews.return_value = {}
         mock_loader.return_value = mock_instance
-        
+
         with TestClient(app) as client:
             yield client
 
@@ -180,12 +182,12 @@ def api_client():
 def isolated_config():
     """Isolate config by resetting global state."""
     import taskforce_one.config.loader as loader_module
-    
+
     # Reset global config
     loader_module._config = None
-    
+
     yield
-    
+
     # Cleanup after test
     loader_module._config = None
 
@@ -194,11 +196,11 @@ def isolated_config():
 def isolated_registry():
     """Isolate tool registry by resetting global state."""
     import taskforce_one.tools.registry as registry_module
-    
+
     # Reset global registry
     registry_module._registry = None
-    
+
     yield
-    
+
     # Cleanup after test
     registry_module._registry = None

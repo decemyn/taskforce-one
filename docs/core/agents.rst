@@ -4,12 +4,12 @@ Agents
 Agents are the fundamental units of Task Force One. Each agent is an AI with a specific role, goal, and backstory.
 
 Creating an Agent
------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
 
 Agents can be created programmatically or loaded from configuration.
 
 Programmatic Creation
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -25,7 +25,7 @@ Programmatic Creation
    )
 
 Agent Properties
----------------
+------------------------------------------------------------------------------------------------------------------------
 
 ``role`` (str, required)
    The role or title of the agent.
@@ -52,7 +52,7 @@ Agent Properties
    Custom LLM configuration overrides.
 
 Using an Agent
--------------
+-----------------------------------------------------------------------------------------
 
 Execute a task with an agent:
 
@@ -61,7 +61,7 @@ Execute a task with an agent:
    result = agent.execute("Research the latest AI trends")
 
 Agent Factory
-------------
+--------------------------------------------------------------------------------------
 
 Use the AgentFactory to create agents from configuration:
 
@@ -78,7 +78,7 @@ Use the AgentFactory to create agents from configuration:
    agent = AgentFactory.from_config(config)
 
 Creating Multiple Agents
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -90,7 +90,7 @@ Creating Multiple Agents
    agents = AgentFactory.create_multiple(configs)
 
 Agent ID
--------
+---------------------
 
 Each agent has a unique ID generated from its role:
 

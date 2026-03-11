@@ -38,10 +38,11 @@ echo -e "${GREEN}Building Task Force One Documentation${NC}"
 echo "=========================================="
 
 # Build and serve docs in Docker
-docker run --rm -v "$(pwd):/app" -p "${PORT}:8080" -w /app/docs python:3.11-slim bash -c "
-    pip install sphinx sphinx-rtd-theme myst-parser sphinx-autodoc-typehints --break-system-packages && 
-    sphinx-build -b html . _build/html && 
-    cd _build/html && 
+# Note: we run from /app to allow sphinx to find the conf.py in /app/docs
+docker run --rm -v "$(pwd):/app" -p "${PORT}:8080" -w /app python:3.11-slim bash -c "
+    pip install sphinx sphinx-rtd-theme myst-parser sphinx-autodoc-typehints --break-system-packages &&
+    sphinx-build -b html docs docs/_build/html &&
+    cd docs/_build/html &&
     python3 -m http.server 8080
 "
 

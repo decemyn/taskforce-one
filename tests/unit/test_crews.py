@@ -20,14 +20,14 @@ class TestBaseCrew:
             backstory="Backstory 1",
         )
         agent1._id = "agent_1"
-        
+
         agent2 = BaseAgent(
             role="Agent 2",
             goal="Goal 2",
             backstory="Backstory 2",
         )
         agent2._id = "agent_2"
-        
+
         return [agent1, agent2]
 
     def test_crew_initialization(self, mock_agents):
@@ -37,7 +37,7 @@ class TestBaseCrew:
             description="Test description",
             agents=mock_agents,
         )
-        
+
         assert crew.name == "Test Crew"
         assert crew.description == "Test description"
         assert len(crew.agents) == 2
@@ -57,7 +57,7 @@ class TestBaseCrew:
             memory=False,
             max_iterations=20,
         )
-        
+
         assert crew.process == "hierarchical"
         assert crew.verbose is False
         assert crew.memory is False
@@ -70,7 +70,7 @@ class TestBaseCrew:
             description="Test description",
             agents=mock_agents,
         )
-        
+
         assert crew.id == "test_crew"
 
     def test_crew_id_with_spaces(self, mock_agents):
@@ -80,7 +80,7 @@ class TestBaseCrew:
             description="Test description",
             agents=mock_agents,
         )
-        
+
         assert crew.id == "content_creation_crew"
 
     def test_crew_repr(self, mock_agents):
@@ -90,7 +90,7 @@ class TestBaseCrew:
             description="Test description",
             agents=mock_agents,
         )
-        
+
         assert "BaseCrew" in repr(crew)
         assert "test_crew" in repr(crew)
         assert "Test Crew" in repr(crew)
@@ -106,9 +106,9 @@ class TestBaseCrew:
             description="Test description",
             agents=mock_agents,
         )
-        
+
         result = crew.crew
-        
+
         assert result is not None
         mock_crew.assert_called_once()
         call_kwargs = mock_crew.call_args[1]
@@ -126,11 +126,11 @@ class TestBaseCrew:
             description="Test description",
             agents=mock_agents,
         )
-        
+
         # Call crew twice
         _ = crew.crew
         _ = crew.crew
-        
+
         # Should only create once
         assert mock_crew.call_count == 1
 
@@ -141,10 +141,10 @@ class TestBaseCrew:
             description="Test description",
             agents=mock_agents,
         )
-        
+
         mock_task = MagicMock()
         result = crew.add_task(mock_task)
-        
+
         assert len(crew._tasks) == 1
         assert result is crew  # Method chaining
 
@@ -155,10 +155,10 @@ class TestBaseCrew:
             description="Test description",
             agents=mock_agents,
         )
-        
+
         mock_tasks = [MagicMock(), MagicMock()]
         result = crew.add_tasks(mock_tasks)
-        
+
         assert len(crew._tasks) == 2
         assert result is crew  # Method chaining
 
@@ -175,14 +175,14 @@ class TestCrewFactory:
             backstory="Backstory 1",
         )
         agent1._id = "agent_1"
-        
+
         agent2 = BaseAgent(
             role="Agent 2",
             goal="Goal 2",
             backstory="Backstory 2",
         )
         agent2._id = "agent_2"
-        
+
         return [agent1, agent2]
 
     def test_from_config_minimal(self, mock_agents):
@@ -192,9 +192,9 @@ class TestCrewFactory:
             "description": "Test description",
             "agents": ["agent_1"],
         }
-        
+
         crew = CrewFactory.from_config(config, mock_agents)
-        
+
         assert crew.name == "Test Crew"
         assert crew.description == "Test description"
         assert len(crew.agents) == 1
@@ -210,9 +210,9 @@ class TestCrewFactory:
             "memory": False,
             "max_iterations": 20,
         }
-        
+
         crew = CrewFactory.from_config(config, mock_agents)
-        
+
         assert crew.process == "hierarchical"
         assert crew.verbose is False
         assert crew.memory is False
@@ -225,9 +225,9 @@ class TestCrewFactory:
             "description": "Test description",
             "agents": ["agent_1"],
         }
-        
+
         crew = CrewFactory.from_config(config, mock_agents)
-        
+
         assert crew.process == "sequential"
         assert crew.verbose is True
         assert crew.memory is True
@@ -240,9 +240,9 @@ class TestCrewFactory:
             "description": "Test description",
             "agents": ["nonexistent"],
         }
-        
+
         crew = CrewFactory.from_config(config, mock_agents)
-        
+
         assert len(crew.agents) == 0
 
     def test_from_config_multiple_agents(self, mock_agents):
@@ -252,9 +252,9 @@ class TestCrewFactory:
             "description": "Test description",
             "agents": ["agent_1", "agent_2"],
         }
-        
+
         crew = CrewFactory.from_config(config, mock_agents)
-        
+
         assert len(crew.agents) == 2
 
     def test_create_multiple(self, mock_agents):
@@ -263,9 +263,9 @@ class TestCrewFactory:
             {"name": "Crew 1", "description": "Desc 1", "agents": ["agent_1"]},
             {"name": "Crew 2", "description": "Desc 2", "agents": ["agent_2"]},
         ]
-        
+
         crews = CrewFactory.create_multiple(configs, mock_agents)
-        
+
         assert len(crews) == 2
         assert crews[0].name == "Crew 1"
         assert crews[1].name == "Crew 2"
@@ -273,5 +273,5 @@ class TestCrewFactory:
     def test_create_multiple_empty_list(self, mock_agents):
         """Test creating multiple crews from empty list."""
         crews = CrewFactory.create_multiple([], mock_agents)
-        
+
         assert len(crews) == 0
