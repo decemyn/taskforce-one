@@ -16,8 +16,8 @@ api:
 
 # LLM Provider Configuration
 llm:
-  provider: "openai"  # openai, anthropic, azure, google
-  model: "gpt-4"
+  provider: "google"  # openai, anthropic, azure, google
+  model: "gemini-2.0-flash"
   temperature: 0.7
   max_tokens: 2000
   timeout: 60
@@ -29,6 +29,9 @@ llm:
   
   anthropic:
     api_key_env: "ANTHROPIC_API_KEY"
+  
+  google:
+    api_key_env: "GOOGLE_API_KEY"
   
   azure:
     api_key_env: "AZURE_OPENAI_API_KEY"

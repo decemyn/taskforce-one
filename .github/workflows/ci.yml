@@ -59,7 +59,6 @@ jobs:
   test-e2e:
     name: E2E Tests
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
     environment:
       name: e2e
     
@@ -72,7 +71,20 @@ jobs:
       
       - name: Create .env file
         run: |
-          echo 'GOOGLE_API_KEY=${{ secrets.GOOGLE_AI_STUDIO_KEY_E2E }}' > .env
+          cat > .env << 'EOF'
+          ENVIRONMENT=development
+          LOG_LEVEL=INFO
+          GOOGLE_API_KEY=${{ secrets.GOOGLE_AI_STUDIO_KEY_E2E }}
+          POSTGRES_USER=taskforce
+          POSTGRES_PASSWORD=taskforce_secret
+          POSTGRES_DB=taskforce_db
+          POSTGRES_HOST=postgres
+          POSTGRES_PORT=5432
+          REDIS_HOST=redis
+          REDIS_PORT=6379
+          API_KEY=e2e_test_key
+          SECRET_KEY=e2e_test_secret
+          EOF
       
       - name: Build Docker images
         uses: docker/build-push-action@v5

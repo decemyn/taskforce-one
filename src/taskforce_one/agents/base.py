@@ -10,6 +10,7 @@ from crewai import Task
 from loguru import logger
 
 from taskforce_one.llm import DynamicLLMLoader
+from taskforce_one.tools.registry import get_registry
 
 
 class BaseAgent:
@@ -120,6 +121,17 @@ class AgentFactory:
         Returns:
             BaseAgent instance
         """
+        # Get tool names from config and convert to tool instances
+        tool_names = config.get("tools", [])
+        registry = get_registry()
+        tools = registry.get_multiple(tool_names)
+
+        # Log any missing tools
+        found_names = set(tool_names) & set(registry.list_tools())
+        for name in tool_names:
+            if name not in found_names:
+                logger.warning(f"Tool '{name}' not found in registry for agent '{config.get('id')}'")
+
         agent = BaseAgent(
             role=config.get("role", ""),
             goal=config.get("goal", ""),
@@ -127,7 +139,7 @@ class AgentFactory:
             verbose=config.get("verbose", True),
             max_iterations=config.get("max_iterations", 5),
             allow_delegation=config.get("allow_delegation", False),
-            tools=config.get("tools", []),
+            tools=tools,
             llm_config=config.get("llm", {}),
             agent_id=config.get("id"),
         )
@@ -137,6 +149,40 @@ class AgentFactory:
         provider_module = llm_config.get("provider_module")
         provider_class = llm_config.get("provider_class")
         provider_config = llm_config.get("config", {})
+
+        # If no provider specified in agent config, try to use global settings
+        if not (provider_module and provider_class):
+            from taskforce_one.config.loader import ConfigLoader
+            global_config = ConfigLoader()
+            settings = global_config.settings
+            llm_settings = settings.llm
+
+            # Map provider name to module and class
+            provider_map = {
+                "openai": ("langchain_openai", "ChatOpenAI"),
+                "anthropic": ("langchain_anthropic", "ChatAnthropic"),
+                "google": ("langchain_google_genai", "ChatGoogleGenerativeAI"),
+                "azure": ("langchain_azure_ai_services", "AzureChatOpenAI"),
+            }
+
+            provider_name = llm_settings.provider.lower()
+            if provider_name in provider_map:
+                provider_module, provider_class = provider_map[provider_name]
+                provider_config = {
+                    "model": llm_settings.model,
+                    "temperature": llm_settings.temperature,
+                    "max_tokens": llm_settings.max_tokens,
+                }
+                # Add API key from environment based on provider
+                if provider_name == "openai":
+                    import os
+                    provider_config["api_key"] = os.getenv("OPENAI_API_KEY")
+                elif provider_name == "anthropic":
+                    import os
+                    provider_config["api_key"] = os.getenv("ANTHROPIC_API_KEY")
+                elif provider_name == "google":
+                    import os
+                    provider_config["google_api_key"] = os.getenv("GOOGLE_API_KEY")
 
         if provider_module and provider_class:
             try:
