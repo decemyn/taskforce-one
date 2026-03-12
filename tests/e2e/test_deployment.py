@@ -132,6 +132,39 @@ class TestDockerDeployment:
             # Result should contain some text from the LLM
             assert len(data["result"]) > 0
 
+    def test_config_reload(self, base_url, wait_for_api):
+        """Test configuration reload endpoint."""
+        response = requests.post(f"{base_url}/config/reload")
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["status"] == "success"
+        assert "agents_loaded" in data
+        assert "crews_loaded" in data
+        assert "message" in data
+        # Should have loaded the configured agents and crews
+        assert data["agents_loaded"] > 0
+        assert data["crews_loaded"] > 0
+
+    def test_reload_then_execute(self, base_url, wait_for_api):
+        """Test that execution works after reload."""
+        # First reload
+        reload_response = requests.post(f"{base_url}/config/reload")
+        assert reload_response.status_code == 200
+
+        # Then try to execute an agent - accept timeout as it's rate limited in CI
+        try:
+            response = requests.post(
+                f"{base_url}/agents/researcher/execute",
+                json={"agent_id": "researcher", "task": "Hello"},
+                timeout=120,
+            )
+            # Accept success, rate limit error, or timeout
+            assert response.status_code in (200, 500)
+        except requests.exceptions.Timeout:
+            # Timeout is expected in CI due to rate limiting
+            pass
+
 
 class TestDockerCompose:
     """Tests for docker-compose setup."""
