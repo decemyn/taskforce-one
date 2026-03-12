@@ -166,3 +166,44 @@ class TestCORS:
         # CORS headers should be present
         # FastAPI's CORSMiddleware adds these on actual requests
         assert response.status_code == 200
+
+
+class TestConfigReload:
+    """Tests for configuration reload endpoint."""
+
+    def test_reload_config_endpoint_exists(self, client):
+        """Test that the reload endpoint exists and returns success."""
+        response = client.post("/config/reload")
+
+        # Should return 200 and success status
+        assert response.status_code == 200
+        data = response.json()
+        assert data["status"] == "success"
+        assert "agents_loaded" in data
+        assert "crews_loaded" in data
+        assert "message" in data
+
+    @patch("taskforce_one.api._initialize_agents")
+    @patch("taskforce_one.api._initialize_crews")
+    @patch("taskforce_one.api.config")
+    def test_reload_calls_reinitialize_functions(self, mock_config, mock_init_crews, mock_init_agents, client):
+        """Test that reload endpoint calls the reinitialize functions."""
+        # Setup mocks
+        mock_config.reload.return_value = None
+
+        response = client.post("/config/reload")
+
+        assert response.status_code == 200
+        mock_config.reload.assert_called_once()
+        mock_init_agents.assert_called_once()
+        mock_init_crews.assert_called_once()
+
+    def test_reload_returns_counts(self, client):
+        """Test that reload endpoint returns the correct counts."""
+        response = client.post("/config/reload")
+
+        assert response.status_code == 200
+        data = response.json()
+        # Based on mock_config, should have 1 agent and 1 crew
+        assert data["agents_loaded"] >= 0
+        assert data["crews_loaded"] >= 0

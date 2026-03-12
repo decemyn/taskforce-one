@@ -69,6 +69,15 @@ class HealthResponse(BaseModel):
     version: str
 
 
+class ReloadResponse(BaseModel):
+    """Response model for configuration reload."""
+
+    status: str
+    agents_loaded: int
+    crews_loaded: int
+    message: str
+
+
 # Store for agents and crews
 _agents: dict[str, BaseAgent] = {}
 _crews: dict[str, BaseCrew] = {}
@@ -77,6 +86,9 @@ _crews: dict[str, BaseCrew] = {}
 def _initialize_agents():
     """Initialize agents from configuration."""
     global _agents
+
+    # Clear existing agents to allow reinitialization
+    _agents.clear()
 
     agents_config = config.load_agents()
     for agent_id, agent_config in agents_config.items():
@@ -91,6 +103,9 @@ def _initialize_agents():
 def _initialize_crews():
     """Initialize crews from configuration."""
     global _crews
+
+    # Clear existing crews to allow reinitialization
+    _crews.clear()
 
     crews_config = config.load_crews()
     for crew_id, crew_config in crews_config.items():
@@ -133,6 +148,36 @@ async def health():
     return HealthResponse(
         status="healthy",
         version=__version__,
+    )
+
+
+@app.post("/config/reload", response_model=ReloadResponse)
+async def reload_config():
+    """Reload crew and agent configuration without restarting the server.
+
+    This endpoint reloads the YAML configuration files and reinitializes
+    all agents and crews. Useful for updating configurations in production
+    without downtime.
+    """
+    logger.info("Reloading configuration...")
+
+    # Reload the configuration cache
+    config.reload()
+
+    # Reinitialize agents and crews
+    _initialize_agents()
+    _initialize_crews()
+
+    agents_count = len(_agents)
+    crews_count = len(_crews)
+
+    logger.info(f"Configuration reloaded: {agents_count} agents, {crews_count} crews")
+
+    return ReloadResponse(
+        status="success",
+        agents_loaded=agents_count,
+        crews_loaded=crews_count,
+        message=f"Reloaded {agents_count} agents and {crews_count} crews",
     )
 
 
