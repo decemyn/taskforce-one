@@ -219,7 +219,19 @@ async def execute_agent(agent_id: str, request: AgentRequest):
         raise HTTPException(status_code=404, detail=f"Agent {agent_id} not found")
 
     agent = _agents[agent_id]
-    result = agent.execute(request.task)
+    try:
+        result = agent.execute(request.task)
+    except Exception as e:
+        logger.exception(f"Agent {agent_id} execution failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "Agent execution failed",
+                "agent_id": agent_id,
+                "message": str(e),
+                "type": type(e).__name__,
+            },
+        )
 
     return AgentResponse(
         agent_id=agent_id,
@@ -234,7 +246,19 @@ async def execute_crew(crew_id: str, request: CrewRequest):
         raise HTTPException(status_code=404, detail=f"Crew {crew_id} not found")
 
     crew = _crews[crew_id]
-    result = crew.execute(request.input_data)
+    try:
+        result = crew.execute(request.input_data)
+    except Exception as e:
+        logger.exception(f"Crew {crew_id} execution failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "error": "Crew execution failed",
+                "crew_id": crew_id,
+                "message": str(e),
+                "type": type(e).__name__,
+            },
+        )
 
     return CrewResponse(
         crew_id=crew_id,
